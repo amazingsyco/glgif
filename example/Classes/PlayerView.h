@@ -86,13 +86,11 @@
 @property(nonatomic, retain) EAGLContext *context;
 
 - (id)initWithFrame:(CGRect)frame inShareGroup:(void*)glShare;
-- (void)drawView:(float)dt;
 - (void)clearView;
-
-- (void)setViewBuffer;
 
 - (void)setAspectScale:(bool)force;
 - (void)clearAspectScale;
 
+- (void)startAnimation:(Video*)aVideo;
 
 @end
