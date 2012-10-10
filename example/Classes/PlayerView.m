@@ -65,12 +65,11 @@ GLint sMaxTextureSize = 1024;
                                         [NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
         
         if (glShare) {
-            context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1 sharegroup:glShare];
+            context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1 sharegroup:(__bridge EAGLSharegroup *)(glShare)];
         } else {
             context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
         }
         if (!context || ![EAGLContext setCurrentContext:context]) {
-            [self release];
             return nil;
         }
         
@@ -107,7 +106,6 @@ GLint sMaxTextureSize = 1024;
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
         
         if (!context || ![EAGLContext setCurrentContext:context]) {
-            [self release];
             return nil;
         }
         
@@ -353,8 +351,6 @@ GLint sMaxTextureSize = 1024;
     [self destroyFramebuffer];
     
     [EAGLContext setCurrentContext:nil];
-    [context release];  
-    [super dealloc];
 }
 
 - (bool)zoomAspect
@@ -373,9 +369,8 @@ GLint sMaxTextureSize = 1024;
     
     if (video) {
         [video stop];
-        [video release];
     }
-    video = [theVideo retain];
+    video = theVideo;
     [video setupRenderTexture];
     video.viewRenderInfo = TargetRenderInfoMake(viewFramebuffer, GIFRectMake(0, 0, backingWidth, backingHeight), projectionMatrix);
     
@@ -491,13 +486,12 @@ GLint sMaxTextureSize = 1024;
 - (void)startAnimation:(Video*)aVideo {
 	if(displayLink){
 		[displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-		[displayLink release];
 		displayLink = nil;
 	}
 
 	self.video = aVideo;
 	[video play:YES];
-	displayLink = [[CADisplayLink displayLinkWithTarget:self selector:@selector(drawView)] retain];
+	displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(drawView)];
 	[displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
@@ -505,7 +499,6 @@ GLint sMaxTextureSize = 1024;
 - (void)stopAnimation {
 	if(displayLink){
 		[displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-		[displayLink release];
 		displayLink = nil;
 	}
 

@@ -106,10 +106,6 @@ void TargetRenderInfoSet(TargetRenderInfo info)
     if (src)
         VideoSource_release(src);
     
-    if (thumbDelegate)
-        [thumbDelegate release];
-    if (thumbObject)
-        [thumbObject release];
    
     if (painter)
        VideoTexture_release(painter);
@@ -117,7 +113,6 @@ void TargetRenderInfoSet(TargetRenderInfo info)
     
     [self clearRenderTexture];
    
-    [super dealloc];
 }
 
 - (void)drawPreviousFrame:(GIFRect)frameRect
@@ -175,9 +170,6 @@ void TargetRenderInfoSet(TargetRenderInfo info)
          UIImage *img = [self dumpFrame:nil];
          if (img) {
             [thumbDelegate performSelector:@selector(videoDumpedFrame:withObject:) withObject:img withObject:thumbObject];
-            [thumbDelegate release];
-            if (thumbObject)
-               [thumbObject release];
             thumbDelegate = nil;
             thumbObject = nil;
          }
@@ -460,7 +452,7 @@ void TargetRenderInfoSet(TargetRenderInfo info)
 {
    switch (type) {
       case VIDEO_GIF:
-         return [[[GifVideo alloc] initWithSource:source inContext:context] autorelease];
+         return [[GifVideo alloc] initWithSource:source inContext:context];
          break;
       default:
          return NULL;

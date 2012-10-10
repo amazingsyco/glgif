@@ -72,7 +72,6 @@
     // Start if loaded
     if (vid) {
         [plView startAnimation:vid];
-        [vid release];
         return;
     }
     
@@ -89,7 +88,7 @@
     // Return YES for supported orientations
     if (okToRotate)
         [(PlayerView*)self.view setTargetOrient:interfaceOrientation];
-    return interfaceOrientation == UIInterfaceOrientationPortrait;
+	return YES;
 }
 
 
@@ -99,8 +98,5 @@
 }
 
 
-- (void)dealloc {
-    [super dealloc];
-}
 
 @end

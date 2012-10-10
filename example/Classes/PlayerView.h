@@ -80,10 +80,10 @@
 }
 
 @property(nonatomic, assign) UIInterfaceOrientation targetOrient;
-@property(nonatomic, retain) Video *video;
+@property(nonatomic, strong) Video *video;
 @property(nonatomic, assign) bool zoomAspect;
 
-@property(nonatomic, retain) EAGLContext *context;
+@property(nonatomic, strong) EAGLContext *context;
 
 - (id)initWithFrame:(CGRect)frame inShareGroup:(void*)glShare;
 - (void)clearView;

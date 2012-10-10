@@ -98,7 +98,6 @@ int goodSize(int val)
         
         if (upload_size == 0 || gifinfo == 0x0)
         {
-            [self release];
             return nil;
         }
     }
@@ -111,7 +110,6 @@ int goodSize(int val)
     if (gifinfo)
         DGifCloseFile(gifinfo);
     
-    [super dealloc];
 }
 
 void map_palette(unsigned char *curPal, int bestFormat, int transIdx, ColorMapObject *global, ColorMapObject *lmap)
