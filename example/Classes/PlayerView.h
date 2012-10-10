@@ -53,12 +53,10 @@
     
     GLfloat projectionMatrix[16];
     
+	CADisplayLink *displayLink;
     
 @public
     UIInterfaceOrientation targetOrient;
-    
-    NSTimer *animationTimer;
-    NSTimeInterval animationInterval;
     
     float rot;
     
@@ -86,9 +84,6 @@
 @property(nonatomic, assign) bool zoomAspect;
 
 @property(nonatomic, retain) EAGLContext *context;
-
-@property NSTimeInterval animationInterval;
-@property(nonatomic, assign) NSTimer *animationTimer;
 
 - (id)initWithFrame:(CGRect)frame inShareGroup:(void*)glShare;
 - (void)drawView:(float)dt;

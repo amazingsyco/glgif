@@ -43,8 +43,6 @@ GLint sMaxTextureSize = 1024;
 @synthesize context;
 @dynamic targetOrient;
 @dynamic zoomAspect;
-@synthesize animationTimer;
-@synthesize animationInterval;
 
 // You must implement this method
 + (Class)layerClass {
@@ -87,7 +85,6 @@ GLint sMaxTextureSize = 1024;
         tex_sx = 1.0;
         tex_sy = 1.0;
         
-        animationInterval = 1.0 / 60.0;
         video = NULL;
         
         targetOrient = UIInterfaceOrientationPortrait;
@@ -126,8 +123,6 @@ GLint sMaxTextureSize = 1024;
         
         tex_sx = 1.0;
         tex_sy = 1.0;
-        
-        animationInterval = 1.0 / 60.0;
         
         video = NULL;
         
@@ -283,7 +278,7 @@ GLint sMaxTextureSize = 1024;
     glTranslatef(-(frameSize.width*0.5), -(frameSize.height*0.5), 0);
     
     // Draw next frame
-    drawn = [video drawNextFrame:animationInterval];
+    drawn = [video drawNextFrame:displayLink.duration];
     
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
@@ -494,36 +489,28 @@ GLint sMaxTextureSize = 1024;
 
 
 - (void)startAnimation:(Video*)aVideo {
-    if (animationTimer)
-        [self stopAnimation];
-    
-    self.video = aVideo;
-    [video play:YES];
-    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:animationInterval target:self selector:@selector(drawView) userInfo:nil repeats:YES];
+	if(displayLink){
+		[displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+		[displayLink release];
+		displayLink = nil;
+	}
+
+	self.video = aVideo;
+	[video play:YES];
+	displayLink = [[CADisplayLink displayLinkWithTarget:self selector:@selector(drawView)] retain];
+	[displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
 
 - (void)stopAnimation {
-    self.animationTimer = nil;
+	if(displayLink){
+		[displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+		[displayLink release];
+		displayLink = nil;
+	}
+
     [video stop];
     self.video = nil;
 }
-
-
-- (void)setAnimationTimer:(NSTimer *)newTimer {
-    [animationTimer invalidate];
-    animationTimer = newTimer;
-}
-
-
-- (void)setAnimationInterval:(NSTimeInterval)interval {
-    
-    animationInterval = interval;
-    if (animationTimer) {
-        self.animationTimer = nil;
-        self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:animationInterval target:self selector:@selector(drawView) userInfo:nil repeats:YES];
-    }
-}
-
 
 @end
